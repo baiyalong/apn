@@ -1,7 +1,7 @@
 var http = require('http');
 var apn = require('apn');
 
-var options = {};
+var options = {production:true,connectionTimeout:0,batchFeedback:true,interval:300};
 var apnConnection = new apn.Connection(options);
 
 var push = function (j) {
@@ -9,19 +9,19 @@ var push = function (j) {
     var note = new apn.Notification();
 
     note.expiry = Math.floor(Date.now() / 1000) + 3600; // Expires 1 hour from now.
-    note.badge = 3;
+    note.badge = 1;
     note.sound = "ping.aiff";
-    note.alert = "\uD83D\uDCE7 \u2709 You have a new message";
-    note.payload = {'messageFrom': 'Caroline'};
+    note.alert = j.msg;//"\uD83D\uDCE7 \u2709 You have a new message";
+    note.payload = {'message':j.msg};
 
     apnConnection.pushNotification(note, myDevice);
 }
 
-
+/*
 var options = {
     "batchFeedback": true,
     "interval": 300
-};
+};*/
 
 var feedback = new apn.Feedback(options);
 feedback.on("feedback", function (devices) {
